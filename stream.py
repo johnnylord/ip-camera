@@ -5,7 +5,7 @@ import cv2
 
 class VideoStream:
 
-    def __init__(self, src=0, transform=None, queue_size=256):
+    def __init__(self, src=0, queue_size=256, resolution=(500, 500)):
         """Initialize the video stream
 
         [Arguments]
@@ -13,14 +13,14 @@ class VideoStream:
             The source of the video. It can be a integer, used as index of
             the webcam on your system. It can be a string, used as either
             the filename or the url of the ip camera.
-        - transform
-            Helper function to transform the frame received from the stream
         - queue_size
             The size of the stream frame buffer
+        - resolution
+            Transform all frames to this resolution
         """
         self.stream = cv2.VideoCapture(src)
         self.stopped = False
-        self.transform = transform
+        self.resolution = resolution
         self.frame_queue = Queue(maxsize=queue_size)
         self.thread = Thread(target=self._update, args=())
         self.thread.daemon = True
@@ -59,9 +59,8 @@ class VideoStream:
                     self.stopped = True
                     continue
 
-                # apply transformation
-                if self.transform:
-                    frame = self.transform(frame)
+                # Resize frame
+                frame = cv2.resize(frame, self.resolution)
 
                 self.frame_queue.put(frame)
             else:

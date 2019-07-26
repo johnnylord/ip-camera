@@ -2,6 +2,9 @@
 
 This repo provides a utility class for connecting IP camera and getting the streaming data.
 
+## TODO
+- [] synchronize the fps of streaming video and exporting video
+
 ## Testing Environment
 ```
 $ uname -a

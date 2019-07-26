@@ -17,3 +17,22 @@ Here are the third-party python modules used in the project
 ```
 python main.py -c configs/webcam.json
 ```
+
+## Configuration file
+I have provide a default configuration file `configs/webcam.json`.
+```
+{
+    "stream": {
+        "src": 0,           # The source of the flie. It can be integer, or string.
+                                # 0 -> the index of the webcam in your system
+                                # "filename" -> the video file
+                                # "url" -> the url of the ip camera
+        "queue_size": 256,  # The buffer size for buffering the streaming data
+        "height": 500,      # height of the resolution
+        "width": 1000       # width of the resolution
+    }
+}
+```
+
+## How to save/record the streaming data
+Please look at `main.py`, and look for `cv2.VideoWriter` part.

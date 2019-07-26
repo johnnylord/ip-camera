@@ -13,10 +13,12 @@ Here are the third-party python modules used in the project
 - opencv-python==4.1.0.25
 - numpy==1.16.4
 
-## How to run the code
+## Run the code
 ```
 python main.py -c configs/webcam.json
 ```
+By default, after executing the program, it will streaming the webcam, display the streaming data through a window, and
+save the streaming data as mp4 file with specific filename under specific directory based on current time.
 
 ## Configuration file
 I have provide a default configuration file `configs/webcam.json`.

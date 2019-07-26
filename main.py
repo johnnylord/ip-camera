@@ -1,4 +1,6 @@
+import os
 import json
+from datetime import datetime
 from argparse import ArgumentParser
 
 import cv2
@@ -21,11 +23,16 @@ if __name__ == "__main__":
                     resolution=(int(config['stream']['width']), int(config['stream']['height'])))
 
     # Record the video
-    # fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    # out = cv2.VideoWriter('output.mp4',
-                        # fourcc,
-                        # 20.0,
-                        # (int(config['stream']['width']), int(config['stream']['height'])))
+    now = datetime.now()
+    dst_dir = now.strftime("%Y-%m-%d")
+    filename = now.strftime("%H-%M-%S") + ".mp4"
+
+    if not os.path.exists(dst_dir):
+        os.mkdir(dst_dir)
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(os.path.join(dst_dir, filename), fourcc, 20.0,
+                        (int(config['stream']['width']), int(config['stream']['height'])))
 
     # Start streaming
     vs.start()
@@ -33,7 +40,7 @@ if __name__ == "__main__":
     # TODO: Apply object dectection and face recognition here
     while vs.size() or not vs.stopped:
         frame = vs.read()
-        # out.write(frame)
+        out.write(frame)
         cv2.imshow("Streaming", frame)
 
         key = cv2.waitKey(1) & 0xFF
@@ -42,5 +49,5 @@ if __name__ == "__main__":
 
     # Stop streaming
     vs.stop()
-    # out.release()
+    out.release()
     cv2.destroyAllWindows()

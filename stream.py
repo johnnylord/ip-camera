@@ -25,6 +25,9 @@ class VideoStream:
         self.thread = Thread(target=self._update, args=())
         self.thread.daemon = True
 
+        if not self.stream.isOpened():
+            raise Exception("Fail to connect to video source")
+
     def start(self):
         """Start streaming"""
         self.thread.start()

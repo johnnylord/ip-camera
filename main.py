@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 
 import cv2
 from stream import VideoStream
+from fps import FPS
 
 
 parser = ArgumentParser()
@@ -22,20 +23,30 @@ if __name__ == "__main__":
                     queue_size=config['stream']['queue_size'],
                     resolution=(int(config['stream']['width']), int(config['stream']['height'])))
 
-    # Record the video
+    # metadata of the exporting video
     now = datetime.now()
     dst_dir = now.strftime("%Y-%m-%d")
     filename = now.strftime("%H-%M-%S") + ".mp4"
 
+    # Make sure the exporting directory exist
     if not os.path.exists(dst_dir):
         os.mkdir(dst_dir)
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(os.path.join(dst_dir, filename), fourcc, 20.0,
+    # Writer for exporting video
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v') # codec used
+
+    # VideoWriter
+    # - @path
+    # - @codec
+    # - @fps
+    # - @resolution
+    out = cv2.VideoWriter(os.path.join(dst_dir, filename), fourcc, 60.0,
                         (int(config['stream']['width']), int(config['stream']['height'])))
 
     # Start streaming
     vs.start()
+    fps = FPS()
+    fps.start()
 
     # TODO: Apply object dectection and face recognition here
     while vs.size() or not vs.stopped:
@@ -47,7 +58,15 @@ if __name__ == "__main__":
         if key == ord('q'):
             vs.stop()
 
+        fps.update()
+
     # Stop streaming
+    fps.stop()
     vs.stop()
+
+    # Release Resource
     out.release()
     cv2.destroyAllWindows()
+
+    print("Elasped time: %s" % str(fps.elapsed()))
+    print("Approximate rate: %s" % str(fps.fps()))

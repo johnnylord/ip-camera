@@ -15,7 +15,7 @@ Here are the third-party python modules used in the project
 
 ## Run the code
 ```
-python main.py -c configs/dsm.json
+python main.py -c configs/template.json
 ```
 
 ## Configuration file

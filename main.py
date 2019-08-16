@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 from datetime import datetime
 from argparse import ArgumentParser
@@ -10,6 +11,8 @@ from fps import FPS
 
 parser = ArgumentParser()
 parser.add_argument("-c", "--config", help="path to configuration file", required=True)
+parser.add_argument("-v", "--verbose", dest='verbose', action="store_true")
+parser.set_defaults(verbose=False)
 
 if __name__ == "__main__":
     args = vars(parser.parse_args())
@@ -21,7 +24,8 @@ if __name__ == "__main__":
     # Instantiate streaming instance
     vs = VideoStream(src=config['stream']['src'],
                     queue_size=config['stream']['queue_size'],
-                    resolution=(int(config['stream']['width']), int(config['stream']['height'])))
+                    resolution=(int(config['stream']['width']), int(config['stream']['height'])),
+                    verbose=args['verbose'])
 
     # metadata of the exporting video
     now = datetime.now()
@@ -40,7 +44,7 @@ if __name__ == "__main__":
     # - @codec
     # - @fps
     # - @resolution
-    out = cv2.VideoWriter(os.path.join(dst_dir, filename), fourcc, 60.0,
+    out = cv2.VideoWriter(os.path.join(dst_dir, filename), fourcc, 30.0,
                         (int(config['stream']['width']), int(config['stream']['height'])))
 
     # Start streaming
@@ -69,4 +73,4 @@ if __name__ == "__main__":
     cv2.destroyAllWindows()
 
     print("Elasped time: %s" % str(fps.elapsed()))
-    print("Approximate rate: %s" % str(fps.fps()))
+    print("Approximate FPS: %s" % str(fps.fps()))

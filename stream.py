@@ -5,7 +5,7 @@ import cv2
 
 class VideoStream:
 
-    def __init__(self, src=0, queue_size=256, resolution=(500, 500)):
+    def __init__(self, src=0, queue_size=256, resolution=(500, 500), verbose=False):
         """Initialize the video stream
 
         [Arguments]
@@ -21,12 +21,13 @@ class VideoStream:
         self.stream = cv2.VideoCapture(src)
         self.stopped = False
         self.resolution = resolution
+        self.verbose = verbose
         self.frame_queue = Queue(maxsize=queue_size)
         self.thread = Thread(target=self._update, args=())
         self.thread.daemon = True
 
         if not self.stream.isOpened():
-            raise Exception("Fail to connect to video source")
+            raise Exception("Fail to connect to video source %s" % str(src))
 
     def start(self):
         """Start streaming"""
@@ -69,6 +70,9 @@ class VideoStream:
             else:
                 # wait 10ms for consumer consuming the frames
                 time.sleep(0.1)
+
+            if self.verbose:
+                print("[Stream] Buffer size: %d" % self.size())
 
         self.stream.release()
 

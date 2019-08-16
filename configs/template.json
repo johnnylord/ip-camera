@@ -1,0 +1,8 @@
+{
+    "stream": {
+        "src": 0,
+        "queue_size": 512,
+        "height": 500,
+        "width": 800
+    }
+}

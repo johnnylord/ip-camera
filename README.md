@@ -17,8 +17,6 @@ Here are the third-party python modules used in the project
 ```
 python main.py -c configs/dsm.json
 ```
-If you execute the command above, it will get the streaming data from the synology dsm, display the streaming data in a window, and
-save the streaming data as mp4 file with specific filename under specific directory based on current time.
 
 ## Configuration file
 ```
@@ -42,4 +40,3 @@ The buffer size for buffering the streaming data
 height of the resolution  
 * **width**  
 width of the resolution  
-
